@@ -3,25 +3,46 @@ package token
 type TokenType string
 
 const (
-	ILLEGAL   = "ILLEGAL"
-	EOF       = "EOF"
-	ASSIGN    = "="
-	PLUS      = "+"
-	MINUS     = "-"
-	BANG      = "!"
-	ASTERISK  = "*"
-	SLASH     = "/"
-	LT        = "<"
-	GT        = ">"
-	COMMA     = ","
-	SEMICOLON = ";"
-	LPAREN    = "("
-	RPAREN    = ")"
-	LBRACE    = "{"
-	RBRACE    = "}"
+	ILLEGAL   TokenType = "ILLEGAL"
+	EOF       TokenType = "EOF"
+	ASSIGN    TokenType = "ASSIGN"
+	PLUS      TokenType = "PLUS"
+	MINUS     TokenType = "MINUS"
+	BANG      TokenType = "BANG"
+	ASTERISK  TokenType = "ASTERISK"
+	SLASH     TokenType = "SLASH"
+	LT        TokenType = "LT"
+	GT        TokenType = "GT"
+	COMMA     TokenType = "COMMA"
+	SEMICOLON TokenType = "SEMICOLON"
+	LPAREN    TokenType = "LPAREN"
+	RPAREN    TokenType = "RPAREN"
+	LBRACE    TokenType = "LBRACE"
+	RBRACE    TokenType = "RBRACE"
+	IDENT     TokenType = "IDENT"
+	INT       TokenType = "INT"
+	FUNCTION  TokenType = "FUNCTION"
+	LET       TokenType = "LET"
+	TRUE      TokenType = "TRUE"
+	FALSE     TokenType = "FALSE"
+	IF        TokenType = "IF"
+	ELSE      TokenType = "ELSE"
+	RETURN    TokenType = "RETURN"
+	EQ        TokenType = "EQ"
+	NEQ       TokenType = "NEQ"
 )
 
 type Token struct {
 	Type    TokenType
 	Literal string
+}
+
+var Keywords = map[string]TokenType{
+	"fn":     FUNCTION,
+	"let":    LET,
+	"true":   TRUE,
+	"false":  FALSE,
+	"if":     IF,
+	"else":   ELSE,
+	"return": RETURN,
 }
