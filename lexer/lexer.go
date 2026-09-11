@@ -6,13 +6,14 @@ import (
 )
 
 type Lexer struct {
-	input        string
+	input        []rune
 	position     int 
-	ch           byte 
+	ch           rune 
 }
 
 func New(input string) *Lexer {
-	l := &Lexer{input: input, position: 0, ch: input[0]}
+	l := &Lexer{input: []rune(input), position: -1}
+	l.readChar()
 	return l
 }
 
@@ -86,26 +87,26 @@ func (l *Lexer) readChar() {
 	}
 }
 
-func (l *Lexer) peekChar() byte {
+func (l *Lexer) peekChar() rune {
 	if l.position+1 >= len(l.input) {
 		return 0
 	}
 	return l.input[l.position+1]
 }
 
-func newToken(tokenType token.TokenType, ch byte) token.Token {
+func newToken(tokenType token.TokenType, ch rune) token.Token {
 	return token.Token{Type: tokenType, Literal: string(ch)}
 }
 
-func isLetter(ch byte) bool {
-	return 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z' || ch == '_'
+func isLetter(ch rune) bool {
+	return 'ঁ' <= ch && ch <= 'য়' || ch == '_'
 }
 
-func isDigit(ch byte) bool {
-	return '0' <= ch && ch <= '9'
+func isDigit(ch rune) bool {
+	return '০' <= ch && ch <= '৯'
 }
 
-func isWhitespace(ch byte) bool {
+func isWhitespace(ch rune) bool {
 	return ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r'
 }
 
