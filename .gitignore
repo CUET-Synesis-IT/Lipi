@@ -26,6 +26,7 @@ go.work.sum
 
 # env file
 .env
+waiig_code_1.3/
 
 # Editor/IDE
 # .idea/
