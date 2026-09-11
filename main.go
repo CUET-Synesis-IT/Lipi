@@ -2,19 +2,17 @@ package main
 
 import (
 	"fmt"
-	"lipi/lexer"
-	"lipi/token"
 	"os"
+	"os/user"
+	"lipi/repl"
 )
 
 func main() {
-	content, _ := os.ReadFile("example/01.lipi")
-	l := lexer.New(string(content))
-	for {
-		tok := l.NextToken()
-		if tok.Type == token.EOF {
-			break
-		}
-		fmt.Printf("tok: %v\n", tok)
+	user, err := user.Current()
+	if err != nil {
+		panic(err)
 	}
+	fmt.Printf("Hello %s! This is the Lipi programming language!\n", user.Username)
+	fmt.Printf("Feel free to type in commands\n")
+	repl.Start(os.Stdin, os.Stdout)
 }
