@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"lipi/lexer"
+	"lipi/parser"
 	"lipi/token"
 	"strings"
 )
@@ -38,10 +39,18 @@ func Start(in io.Reader, out io.Writer) {
 		}
 
 		l := lexer.New(input)
-
-		fmt.Fprintln(out)
 		for tok := l.NextToken(); tok.Type != token.EOF; tok = l.NextToken() {
 			fmt.Fprintf(out, "Token: %v\n", tok)
 		}
+
+		l = lexer.New(input)
+		p := parser.New(l)
+		program, err := p.Parse()
+		if err != nil {
+			fmt.Fprintln(out, err)
+		}
+		fmt.Fprintln(out, program)
+		fmt.Fprintln(out)
+
 	}
 }

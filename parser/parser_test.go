@@ -67,7 +67,6 @@ func TestReturnStatement(t *testing.T) {
 		t.Fatal("Parse() returned nil")
 	}
 	if len(program.Statements) != 2 {
-		fmt.Printf("program.Statements: %v\n", program.Statements)
 		t.Fatalf("expected 2 statements, got %d", len(program.Statements))
 	}
 	for i, stmt := range program.Statements {
