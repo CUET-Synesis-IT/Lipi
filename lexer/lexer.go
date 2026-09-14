@@ -1,14 +1,14 @@
 package lexer
 
 import (
-	"strings"
 	"lipi/token"
+	"strings"
 )
 
 type Lexer struct {
-	input        []rune
-	position     int 
-	ch           rune 
+	input    []rune
+	position int
+	ch       rune
 }
 
 func New(input string) *Lexer {
