@@ -19,7 +19,7 @@ func Start(in io.Reader, out io.Writer) {
 		fmt.Fprint(out, PROMPT)
 
 		if !scanner.Scan() {
-			return
+			break
 		}
 
 		line := strings.TrimSpace(scanner.Text())
@@ -33,7 +33,7 @@ func Start(in io.Reader, out io.Writer) {
 
 		for strings.Count(input, "{") > strings.Count(input, "}") {
 			if !scanner.Scan() {
-				return
+				break
 			}
 			input += "\n" + scanner.Text()
 		}
@@ -52,5 +52,9 @@ func Start(in io.Reader, out io.Writer) {
 		fmt.Fprintln(out, program)
 		fmt.Fprintln(out)
 
+	}
+
+	if err := scanner.Err(); err != nil {
+		fmt.Fprintf(out, "Error reading input: %v\n", err)
 	}
 }
