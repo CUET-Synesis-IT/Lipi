@@ -18,7 +18,7 @@ func Start(in io.Reader, out io.Writer) {
 		fmt.Fprint(out, PROMPT)
 
 		if !scanner.Scan() {
-			return
+			break
 		}
 
 		line := strings.TrimSpace(scanner.Text())
@@ -31,7 +31,7 @@ func Start(in io.Reader, out io.Writer) {
 
 		for strings.Count(input, "{") > strings.Count(input, "}") {
 			if !scanner.Scan() {
-				return
+				break
 			}
 			input += "\n" + scanner.Text()
 		}
@@ -42,5 +42,9 @@ func Start(in io.Reader, out io.Writer) {
 		for tok := l.NextToken(); tok.Type != token.EOF; tok = l.NextToken() {
 			fmt.Fprintf(out, "Token: %v\n", tok)
 		}
+	}
+
+	if err := scanner.Err(); err != nil {
+		fmt.Fprintf(out, "Error reading input: %v\n", err)
 	}
 }
