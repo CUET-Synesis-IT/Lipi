@@ -6,6 +6,7 @@ import (
 	"io"
 	"lipi/lexer"
 	"lipi/token"
+	"strings"
 )
 
 const PROMPT = ">> "
@@ -14,18 +15,32 @@ func Start(in io.Reader, out io.Writer) {
 	scanner := bufio.NewScanner(in)
 
 	for {
-		fmt.Printf(PROMPT)
-		scanned := scanner.Scan()
-		if !scanned {
+		fmt.Fprint(out, PROMPT)
+
+		if !scanner.Scan() {
 			return
 		}
 
-		line := scanner.Text()
-		l := lexer.New(line)
-		
-		fmt.Printf("\n")
+		line := strings.TrimSpace(scanner.Text())
+
+		if line == "exit" {
+			return
+		}
+
+		input := line
+
+		for strings.Count(input, "{") > strings.Count(input, "}") {
+			if !scanner.Scan() {
+				return
+			}
+			input += "\n" + scanner.Text()
+		}
+
+		l := lexer.New(input)
+
+		fmt.Fprintln(out)
 		for tok := l.NextToken(); tok.Type != token.EOF; tok = l.NextToken() {
-			fmt.Printf("Token: %v\n", tok)
+			fmt.Fprintf(out, "Token: %v\n", tok)
 		}
 	}
 }
