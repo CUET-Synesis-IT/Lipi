@@ -32,6 +32,15 @@ const (
 	NEQ       TokenType = "NEQ"
 )
 
+const (
+	LOWEST = iota
+	EQUALS
+	LESSGREATER
+	SUM
+	PRODUCT
+	PREFIX
+)
+
 type Token struct {
 	Type    TokenType
 	Literal string
@@ -45,4 +54,28 @@ var Keywords = map[string]TokenType{
 	"যদি":     IF,
 	"নাহলে":   ELSE,
 	"ফেরাও":   RETURN,
+}
+
+func (t TokenType) IsInfix() bool {
+	switch t {
+	case PLUS, MINUS, ASTERISK, SLASH, LT, GT, EQ, NEQ:
+		return true
+	default:
+		return false
+	}
+}
+
+func (t TokenType) Precedence() int {
+	switch t {
+	case EQ, NEQ:
+		return EQUALS
+	case LT, GT:
+		return LESSGREATER
+	case PLUS, MINUS:
+		return SUM
+	case SLASH, ASTERISK:
+		return PRODUCT
+	default:
+		return LOWEST
+	}
 }
