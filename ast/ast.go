@@ -1,9 +1,12 @@
 package ast
 
-import "lipi/token"
+import (
+	"bytes"
+)
 
 type Node interface {
 	TokenLiteral() string
+	String() string
 }
 
 type Expression interface {
@@ -23,34 +26,10 @@ type Program struct {
 func (p *Program) TokenLiteral() string {
 	return "ROOT"
 }
-
-type LetStatement struct {
-	Token token.Token
-	Name  *Identifier
-	Value Expression
-}
-
-func (ls *LetStatement) StatementNode() {}
-func (ls *LetStatement) TokenLiteral() string {
-	return ls.Token.Literal
-}
-
-type ReturnStatement struct {
-	Token token.Token
-	Value Expression
-}
-
-func (rs *ReturnStatement) StatementNode() {}
-func (rs *ReturnStatement) TokenLiteral() string {
-	return rs.Token.Literal
-}
-
-type Identifier struct {
-	Token token.Token
-	Value string
-}
-
-func (i *Identifier) ExpressionNode() {}
-func (i *Identifier) TokenLiteral() string {
-	return i.Token.Literal
+func (p *Program) String() string {
+	var out bytes.Buffer
+	for _, s := range p.Statements {
+		out.WriteString(s.String())
+	}
+	return out.String()
 }
