@@ -57,8 +57,4 @@ func Start(in io.Reader, out io.Writer) {
 	if err := scanner.Err(); err != nil {
 		fmt.Fprintf(out, "Error reading input: %v\n", err)
 	}
-
-	if err := scanner.Err(); err != nil {
-		fmt.Fprintf(out, "Error reading input: %v\n", err)
-	}
 }
