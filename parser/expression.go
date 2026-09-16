@@ -19,6 +19,8 @@ func (p *Parser) parseExpression(currPrecedence int) (ast.Expression, error) {
 		left, err = p.parsePrefixExpression()
 	case token.LPAREN:
 		left, err = p.parseGroupExpression()
+	case token.TRUE, token.FALSE:
+		left, err = p.parseBoolean()
 	default:
 		err = fmt.Errorf("unknown expression type: %s", p.currentToken.Type)
 	}
@@ -90,4 +92,11 @@ func (p *Parser) parseGroupExpression() (ast.Expression, error) {
 		return nil, err
 	}
 	return expr, nil
+}
+
+func (p *Parser) parseBoolean() (*ast.Boolean, error) {
+	if p.currentToken.Type != token.TRUE && p.currentToken.Type != token.FALSE {
+		return nil, fmt.Errorf("unknown boolean: %s", p.currentToken.Type)
+	}
+	return &ast.Boolean{Token: p.currentToken, Value: p.currentToken.Type == token.TRUE}, nil
 }
