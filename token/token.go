@@ -38,11 +38,11 @@ type Token struct {
 }
 
 var Keywords = map[string]TokenType{
-	"ফাঙ্কশন":     FUNCTION,
-	"ধর":    LET,
-	"সত্য":   TRUE,
+	"ফাঙ্কশন": FUNCTION,
+	"ধর":      LET,
+	"সত্য":    TRUE,
 	"মিথ্যা":  FALSE,
 	"যদি":     IF,
 	"নাহলে":   ELSE,
-	"ফেরাও": RETURN,
+	"ফেরাও":   RETURN,
 }

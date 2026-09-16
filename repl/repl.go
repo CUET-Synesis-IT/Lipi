@@ -24,6 +24,7 @@ func Start(in io.Reader, out io.Writer) {
 		line := strings.TrimSpace(scanner.Text())
 
 		if line == "exit" {
+			fmt.Fprintln(out, "Goodbye!")
 			return
 		}
 

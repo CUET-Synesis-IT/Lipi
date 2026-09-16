@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
+	"lipi/repl"
 	"os"
 	"os/user"
-	"lipi/repl"
 )
 
 func main() {
