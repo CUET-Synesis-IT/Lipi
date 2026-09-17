@@ -309,3 +309,37 @@ func TestFuncExpression(t *testing.T) {
 		)
 	}
 }
+
+func TestCallExpression(t *testing.T) {
+	input := `ধর যোগফল = যোগ(ক, খ + যোগ(ক, খ))`
+
+	l := lexer.New(input)
+	p := New(l)
+
+	program, err := p.Parse()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(program.Statements) != 1 {
+		t.Fatalf(
+			"expected 1 statement, got %d",
+			len(program.Statements),
+		)
+	}
+
+	stmt, ok := program.Statements[0].(*ast.LetStatement)
+	if !ok {
+		t.Fatalf(
+			"expected LetStatement, got %T",
+			program.Statements[0],
+		)
+	}
+
+	if stmt.Value.String() != "যোগ(ক, (খ + যোগ(ক, খ)))" {
+		t.Fatalf(
+			"expected value to be 'যোগ(ক, (খ + যোগ(ক, খ)))', got %s",
+			stmt.Value.String(),
+		)
+	}
+}

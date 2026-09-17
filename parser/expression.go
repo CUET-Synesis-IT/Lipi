@@ -31,14 +31,73 @@ func (p *Parser) parseExpression(currPrecedence int) (ast.Expression, error) {
 	if err != nil {
 		return nil, err
 	}
-	for p.peekToken.Type.IsInfix() && currPrecedence < p.peekToken.Type.Precedence() {
-		p.nextToken()
-		left, err = p.parseInfixExpression(left)
+	for {
+		if p.peekToken.Type.IsInfix() && currPrecedence < p.peekToken.Type.Precedence() {
+			p.nextToken()
+			left, err = p.parseInfixExpression(left)
+			if err != nil {
+				return nil, err
+			}
+			continue
+		}
+
+		if p.peekToken.Type == token.LPAREN && currPrecedence < token.CALL {
+			p.nextToken()
+			left, err = p.parseCallExpression(left)
+			if err != nil {
+				return nil, err
+			}
+			continue
+		}
+
+		break
+	}
+	return left, nil
+}
+
+func (p *Parser) parseCallExpression(left ast.Expression) (ast.Expression, error) {
+	ident, ok := left.(*ast.Identifier)
+	if !ok {
+		return nil, fmt.Errorf("expected identifier, got %s", left.TokenLiteral())
+	}
+
+	expr := &ast.CallExpression{Token: p.currentToken, Function: ident}
+
+	var err error
+	expr.Arguments, err = p.parseArguments()
+	if err != nil {
+		return nil, err
+	}
+
+	return expr, nil
+}
+
+func (p *Parser) parseArguments() ([]ast.Expression, error) {
+	var args []ast.Expression
+	if err := p.expectToken(token.LPAREN); err != nil {
+		return nil, err
+	}
+	p.nextToken()
+
+	for p.currentToken.Type != token.RPAREN {
+		arg, err := p.parseExpression(token.LOWEST)
 		if err != nil {
 			return nil, err
 		}
+		args = append(args, arg)
+		p.nextToken()
+
+		if err := p.expectToken(token.COMMA); err != nil {
+			break
+		}
+		p.nextToken()
 	}
-	return left, nil
+
+	if err := p.expectToken(token.RPAREN); err != nil {
+		return nil, err
+	}
+
+	return args, nil
 }
 
 func (p *Parser) parseFuncExpression() (ast.Expression, error) {

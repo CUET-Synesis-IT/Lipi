@@ -39,6 +39,7 @@ const (
 	SUM
 	PRODUCT
 	PREFIX
+	CALL
 )
 
 type Token struct {
