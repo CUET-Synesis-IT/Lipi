@@ -44,7 +44,7 @@ func (p *Parser) Parse() (*ast.Program, error) {
 
 func (p *Parser) expectToken(t token.TokenType) error {
 	if p.currentToken.Type != t {
-		return fmt.Errorf("expected %s, got %s", t, p.currentToken.Type)
+		return fmt.Errorf("expected %s, got %s", t, p.currentToken)
 	}
 	return nil
 }

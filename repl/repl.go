@@ -49,7 +49,9 @@ func Start(in io.Reader, out io.Writer) {
 		if err != nil {
 			fmt.Fprintln(out, err)
 		}
-		fmt.Fprintln(out, program)
+		if program != nil {
+			fmt.Fprintln(out, program)
+		}
 		fmt.Fprintln(out)
 
 	}

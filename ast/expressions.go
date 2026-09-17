@@ -106,3 +106,30 @@ func (ie *IfExpression) String() string {
 	}
 	return out.String()
 }
+
+type FuncExpression struct {
+	Token      token.Token
+	Parameters []*Identifier
+	Body       []Statement
+}
+
+func (fe *FuncExpression) ExpressionNode() {}
+func (fe *FuncExpression) TokenLiteral() string {
+	return fe.Token.Literal
+}
+func (fe *FuncExpression) String() string {
+	var out bytes.Buffer
+	out.WriteString("FUNC ")
+	for _, param := range fe.Parameters {
+		out.WriteString(param.String())
+		out.WriteString(" ")
+	}
+	out.WriteString("{\n")
+	for _, stmt := range fe.Body {
+		out.WriteString("  ")
+		out.WriteString(stmt.String())
+		out.WriteString("\n")
+	}
+	out.WriteString("}")
+	return out.String()
+}

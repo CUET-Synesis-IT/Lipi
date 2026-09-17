@@ -243,3 +243,69 @@ func TestIfElseExpression(t *testing.T) {
 		)
 	}
 }
+
+func TestFuncExpression(t *testing.T) {
+	input := `ধর যোগ_করো = ফাঙ্কশন(ক, খ) {
+	    ফেরাও ক + খ;
+	};`
+
+	l := lexer.New(input)
+	p := New(l)
+
+	program, err := p.Parse()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(program.Statements) != 1 {
+		t.Fatalf(
+			"expected 1 statement, got %d",
+			len(program.Statements),
+		)
+	}
+
+	stmt, ok := program.Statements[0].(*ast.LetStatement)
+	if !ok {
+		t.Fatalf(
+			"expected ExpressionStatement, got %T",
+			program.Statements[0],
+		)
+	}
+
+	expr, ok := stmt.Value.(*ast.FuncExpression)
+	if !ok {
+		t.Fatalf(
+			"expected FuncExpression, got %T",
+			stmt.Value,
+		)
+	}
+
+	if expr.Parameters == nil {
+		t.Fatal("expected parameters")
+	}
+
+	if len(expr.Parameters) != 2 {
+		t.Fatalf(
+			"expected 2 parameters, got %d",
+			len(expr.Parameters),
+		)
+	}
+
+	if expr.Body == nil {
+		t.Fatal("expected body")
+	}
+
+	if len(expr.Body) != 1 {
+		t.Fatalf(
+			"expected 1 body statement, got %d",
+			len(expr.Body),
+		)
+	}
+
+	if expr.Body[0].String() != "RETURN (ক + খ);" {
+		t.Fatalf(
+			"expected body statement to be 'RETURN (ক + খ);', got %s",
+			expr.Body[0].String(),
+		)
+	}
+}
