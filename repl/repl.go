@@ -12,7 +12,7 @@ import (
 
 const PROMPT = ">> "
 
-func Start(in io.Reader, out io.Writer) {
+func Start(in io.Reader, out io.Writer, username string) {
 	scanner := bufio.NewScanner(in)
 
 	for {
@@ -25,7 +25,7 @@ func Start(in io.Reader, out io.Writer) {
 		line := strings.TrimSpace(scanner.Text())
 
 		if line == "exit" {
-			fmt.Fprintln(out, "Goodbye!")
+			fmt.Fprintf(out, "Goodbye, %s!\n", username)
 			return
 		}
 
