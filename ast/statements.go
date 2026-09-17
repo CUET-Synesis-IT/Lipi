@@ -20,11 +20,7 @@ func (ls *LetStatement) String() string {
 	out.WriteString("LET ")
 	out.WriteString(ls.Name.String())
 	out.WriteString(" = ")
-	if ls.Value != nil {
-		out.WriteString(ls.Value.String())
-	} else {
-		out.WriteString("todo")
-	}
+	out.WriteString(ls.Value.String())
 	out.WriteString(";")
 	return out.String()
 }
@@ -41,11 +37,7 @@ func (rs *ReturnStatement) TokenLiteral() string {
 func (rs *ReturnStatement) String() string {
 	var out bytes.Buffer
 	out.WriteString("RETURN ")
-	if rs.Value != nil {
-		out.WriteString(rs.Value.String())
-	} else {
-		out.WriteString("todo")
-	}
+	out.WriteString(rs.Value.String())
 	out.WriteString(";")
 	return out.String()
 }
@@ -61,11 +53,7 @@ func (es *ExpressionStatement) TokenLiteral() string {
 }
 func (es *ExpressionStatement) String() string {
 	var out bytes.Buffer
-	if es.Expression != nil {
-		out.WriteString(es.Expression.String())
-	} else {
-		out.WriteString("todo")
-	}
+	out.WriteString(es.Expression.String())
 	out.WriteString(";")
 	return out.String()
 }
