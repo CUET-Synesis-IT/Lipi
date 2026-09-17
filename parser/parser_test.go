@@ -140,3 +140,106 @@ func TestExpression(t *testing.T) {
 		}
 	}
 }
+
+func TestIfExpression(t *testing.T) {
+	input := `যদি (খ < ৫) {
+		খ;
+	}`
+
+	l := lexer.New(input)
+	p := New(l)
+
+	program, err := p.Parse()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if program == nil {
+		t.Fatal("Parse() returned nil")
+	}
+
+	if len(program.Statements) != 1 {
+		t.Fatalf(
+			"expected 1 statement, got %d",
+			len(program.Statements),
+		)
+	}
+
+	stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
+	if !ok {
+		t.Fatalf(
+			"expected ExpressionStatement, got %T",
+			program.Statements[0],
+		)
+	}
+
+	expr, ok := stmt.Expression.(*ast.IfExpression)
+	if !ok {
+		t.Fatalf(
+			"expected IfExpression, got %T",
+			stmt.Expression,
+		)
+	}
+
+	if expr.Condition == nil {
+		t.Fatal("if condition is nil")
+	}
+
+	if expr.Consequence == nil {
+		t.Fatal("if consequence is nil")
+	}
+
+	if expr.Alternative != nil {
+		t.Fatal("expected no alternative")
+	}
+
+	if len(expr.Consequence) != 1 {
+		t.Fatalf(
+			"expected 1 consequence statement, got %d",
+			len(expr.Consequence),
+		)
+	}
+}
+
+func TestIfElseExpression(t *testing.T) {
+	input := `যদি (খ < ৫) {
+		খ;
+	} নাহলে {
+		১০;
+	}`
+
+	l := lexer.New(input)
+	p := New(l)
+
+	program, err := p.Parse()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
+	if !ok {
+		t.Fatalf(
+			"expected ExpressionStatement, got %T",
+			program.Statements[0],
+		)
+	}
+
+	expr, ok := stmt.Expression.(*ast.IfExpression)
+	if !ok {
+		t.Fatalf(
+			"expected IfExpression, got %T",
+			stmt.Expression,
+		)
+	}
+
+	if expr.Alternative == nil {
+		t.Fatal("expected alternative block")
+	}
+
+	if len(expr.Alternative) != 1 {
+		t.Fatalf(
+			"expected 1 alternative statement, got %d",
+			len(expr.Alternative),
+		)
+	}
+}

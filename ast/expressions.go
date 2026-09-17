@@ -1,6 +1,7 @@
 package ast
 
 import (
+	"bytes"
 	"fmt"
 	"lipi/token"
 )
@@ -71,4 +72,37 @@ func (b *Boolean) TokenLiteral() string {
 }
 func (b *Boolean) String() string {
 	return fmt.Sprintf("%t", b.Value)
+}
+
+type IfExpression struct {
+	Token       token.Token
+	Condition   Expression
+	Consequence []Statement
+	Alternative []Statement
+}
+
+func (ie *IfExpression) ExpressionNode() {}
+func (ie *IfExpression) TokenLiteral() string {
+	return ie.Token.Literal
+}
+func (ie *IfExpression) String() string {
+	var out bytes.Buffer
+	out.WriteString("IF ")
+	out.WriteString(ie.Condition.String())
+	out.WriteString(" { ")
+	for _, stmt := range ie.Consequence {
+		out.WriteString("\n  ")
+		out.WriteString(stmt.String())
+	}
+	if ie.Alternative == nil {
+		out.WriteString("\n}")
+	} else {
+		out.WriteString("\n} ELSE {")
+		for _, stmt := range ie.Alternative {
+			out.WriteString("\n  ")
+			out.WriteString(stmt.String())
+		}
+		out.WriteString("\n}")
+	}
+	return out.String()
 }

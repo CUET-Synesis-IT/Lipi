@@ -21,6 +21,8 @@ func (p *Parser) parseExpression(currPrecedence int) (ast.Expression, error) {
 		left, err = p.parseGroupExpression()
 	case token.TRUE, token.FALSE:
 		left, err = p.parseBoolean()
+	case token.IF:
+		left, err = p.parseIfExpression()
 	default:
 		err = fmt.Errorf("unknown expression type: %s", p.currentToken.Type)
 	}
@@ -35,6 +37,62 @@ func (p *Parser) parseExpression(currPrecedence int) (ast.Expression, error) {
 		}
 	}
 	return left, nil
+}
+
+func (p *Parser) parseIfExpression() (ast.Expression, error) {
+	expr := &ast.IfExpression{Token: p.currentToken}
+	p.nextToken()
+
+	if err := p.expectToken(token.LPAREN); err != nil {
+		return nil, err
+	}
+	p.nextToken()
+
+	var err error
+	expr.Condition, err = p.parseExpression(token.LOWEST)
+	if err != nil {
+		return nil, err
+	}
+	p.nextToken()
+
+	if err := p.expectToken(token.RPAREN); err != nil {
+		return nil, err
+	}
+	p.nextToken()
+
+	if err := p.expectToken(token.LBRACE); err != nil {
+		return nil, err
+	}
+	p.nextToken()
+
+	for p.currentToken.Type != token.RBRACE {
+		stmt, err := p.parseStatement()
+		if err != nil {
+			return nil, err
+		}
+		expr.Consequence = append(expr.Consequence, stmt)
+	}
+
+	if p.peekToken.Type != token.ELSE {
+		return expr, nil
+	}
+
+	p.nextToken()
+	p.nextToken()
+	if err := p.expectToken(token.LBRACE); err != nil {
+		return nil, err
+	}
+	p.nextToken()
+
+	for p.currentToken.Type != token.RBRACE {
+		stmt, err := p.parseStatement()
+		if err != nil {
+			return nil, err
+		}
+		expr.Alternative = append(expr.Alternative, stmt)
+	}
+
+	return expr, nil
 }
 
 func (p *Parser) parseIdentifier() (*ast.Identifier, error) {
