@@ -36,10 +36,8 @@ func (p *Parser) parseLetStatement() (*ast.LetStatement, error) {
 	if err != nil {
 		return nil, err
 	}
-	p.nextToken()
 
-	// TODO: fix later
-	for p.currentToken.Type != token.SEMICOLON && p.currentToken.Type != token.EOF {
+	for p.peekToken.Type == token.SEMICOLON {
 		p.nextToken()
 	}
 	p.nextToken()
@@ -51,15 +49,21 @@ func (p *Parser) parseReturnStatement() (*ast.ReturnStatement, error) {
 	stmt := &ast.ReturnStatement{Token: p.currentToken}
 	p.nextToken()
 
+	if p.currentToken.Type == token.SEMICOLON {
+		for p.peekToken.Type == token.SEMICOLON {
+			p.nextToken()
+		}
+		p.nextToken()
+		return stmt, nil
+	}
+
 	var err error
 	stmt.Value, err = p.parseExpression(token.LOWEST)
 	if err != nil {
 		return nil, err
 	}
-	p.nextToken()
 
-	// TODO: fix later
-	for p.currentToken.Type != token.SEMICOLON && p.currentToken.Type != token.EOF {
+	for p.peekToken.Type == token.SEMICOLON {
 		p.nextToken()
 	}
 	p.nextToken()
@@ -75,10 +79,8 @@ func (p *Parser) parseExpressionStatement() (*ast.ExpressionStatement, error) {
 	if err != nil {
 		return nil, err
 	}
-	p.nextToken()
 
-	// TODO: fix later
-	for p.currentToken.Type != token.SEMICOLON && p.currentToken.Type != token.EOF {
+	for p.peekToken.Type == token.SEMICOLON {
 		p.nextToken()
 	}
 	p.nextToken()

@@ -343,3 +343,72 @@ func TestCallExpression(t *testing.T) {
 		)
 	}
 }
+
+func TestFuncExpressionNoParams(t *testing.T) {
+	input := `ধর পাই = ফাঙ্কশন() { ফেরাও ৫; };`
+
+	l := lexer.New(input)
+	p := New(l)
+
+	program, err := p.Parse()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(program.Statements) != 1 {
+		t.Fatalf("expected 1 statement, got %d", len(program.Statements))
+	}
+
+	stmt, ok := program.Statements[0].(*ast.LetStatement)
+	if !ok {
+		t.Fatalf("expected LetStatement, got %T", program.Statements[0])
+	}
+
+	expr, ok := stmt.Value.(*ast.FuncExpression)
+	if !ok {
+		t.Fatalf("expected FuncExpression, got %T", stmt.Value)
+	}
+
+	if len(expr.Parameters) != 0 {
+		t.Fatalf("expected 0 parameters, got %d", len(expr.Parameters))
+	}
+
+	if len(expr.Body) != 1 {
+		t.Fatalf("expected 1 body statement, got %d", len(expr.Body))
+	}
+}
+
+func TestNestedIfStatements(t *testing.T) {
+	input := `যদি (সত্য) {
+		যদি (সত্য) {
+			ফেরাও ২;
+		}
+		ফেরাও ১;
+	}`
+
+	l := lexer.New(input)
+	p := New(l)
+
+	program, err := p.Parse()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(program.Statements) != 1 {
+		t.Fatalf("expected 1 statement, got %d", len(program.Statements))
+	}
+
+	stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
+	if !ok {
+		t.Fatalf("expected ExpressionStatement, got %T", program.Statements[0])
+	}
+
+	ifExpr, ok := stmt.Expression.(*ast.IfExpression)
+	if !ok {
+		t.Fatalf("expected IfExpression, got %T", stmt.Expression)
+	}
+
+	if len(ifExpr.Consequence) != 2 {
+		t.Fatalf("expected 2 statements in consequence, got %d", len(ifExpr.Consequence))
+	}
+}
