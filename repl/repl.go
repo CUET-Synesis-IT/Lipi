@@ -4,7 +4,9 @@ import (
 	"bufio"
 	"fmt"
 	"io"
+	"lipi/eval"
 	"lipi/lexer"
+	"lipi/object"
 	"lipi/parser"
 	"lipi/token"
 	"strings"
@@ -14,6 +16,8 @@ const PROMPT = ">> "
 
 func Start(in io.Reader, out io.Writer, username string) {
 	scanner := bufio.NewScanner(in)
+
+	env := object.NewEnvironment()
 
 	for {
 		fmt.Fprint(out, PROMPT)
@@ -45,15 +49,31 @@ func Start(in io.Reader, out io.Writer, username string) {
 
 		l = lexer.New(input)
 		p := parser.New(l)
+
 		program, err := p.Parse()
 		if err != nil {
-			fmt.Fprintln(out, err)
+			fmt.Fprintln(out, "Parser Error:", err)
+			fmt.Fprintln(out)
+			continue
 		}
+
 		if program != nil {
+			fmt.Fprintln(out, "AST:")
 			fmt.Fprintln(out, program)
 		}
-		fmt.Fprintln(out)
 
+		result, err := eval.Eval(program, env)
+		if err != nil {
+			fmt.Fprintln(out, "Evaluation Error:", err)
+			fmt.Fprintln(out)
+			continue
+		}
+
+		if result != nil {
+			fmt.Fprintf(out, "Result: %s\n", result.Inspect())
+		}
+
+		fmt.Fprintln(out)
 	}
 
 	if err := scanner.Err(); err != nil {
