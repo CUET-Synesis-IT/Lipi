@@ -61,16 +61,16 @@ func (i *InfixExpression) String() string {
 	return fmt.Sprintf("(%s %s %s)", i.Left, i.Operator, i.Right)
 }
 
-type Boolean struct {
+type BooleanLiteral struct {
 	Token token.Token
 	Value bool
 }
 
-func (b *Boolean) ExpressionNode() {}
-func (b *Boolean) TokenLiteral() string {
+func (b *BooleanLiteral) ExpressionNode() {}
+func (b *BooleanLiteral) TokenLiteral() string {
 	return b.Token.Literal
 }
-func (b *Boolean) String() string {
+func (b *BooleanLiteral) String() string {
 	return fmt.Sprintf("%t", b.Value)
 }
 

@@ -272,9 +272,9 @@ func (p *Parser) parseGroupExpression() (ast.Expression, error) {
 	return expr, nil
 }
 
-func (p *Parser) parseBoolean() (*ast.Boolean, error) {
+func (p *Parser) parseBoolean() (*ast.BooleanLiteral, error) {
 	if p.currentToken.Type != token.TRUE && p.currentToken.Type != token.FALSE {
 		return nil, fmt.Errorf("unknown boolean: %s", p.currentToken.Type)
 	}
-	return &ast.Boolean{Token: p.currentToken, Value: p.currentToken.Type == token.TRUE}, nil
+	return &ast.BooleanLiteral{Token: p.currentToken, Value: p.currentToken.Type == token.TRUE}, nil
 }

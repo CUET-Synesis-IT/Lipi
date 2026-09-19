@@ -24,9 +24,9 @@ A Bengali-themed toy programming language: built just for learning, and the joy 
 ## Conditionals
 ```lipi
 ধর সংখ্যা = ১
-যদি সংখ্যা < ৫ {
-    আউটপুট = "সংখ্যা ৫ এর চেয়ে ছোট"
+যদি (সংখ্যা < ৫) {
+    ধর আউটপুট = ৫;
 } নাহলে {
-    আউটপুট = "সংখ্যা ৫ এর সমান বা বড়"
+    ধর আউটপুট = ১;
 }
 ```
