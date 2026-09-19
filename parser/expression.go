@@ -167,6 +167,11 @@ func (p *Parser) parseParameters() ([]*ast.Identifier, error) {
 	}
 	p.nextToken()
 
+	if p.currentToken.Type == token.RPAREN {
+		p.nextToken()
+		return params, nil
+	}
+
 	for {
 		param, err := p.parseIdentifier()
 		if err != nil {
@@ -200,7 +205,7 @@ func (p *Parser) parseBody() ([]ast.Statement, error) {
 	}
 	p.nextToken()
 
-	for p.currentToken.Type != token.RBRACE {
+	for p.currentToken.Type != token.RBRACE && p.currentToken.Type != token.EOF {
 		stmt, err := p.parseStatement()
 		if err != nil {
 			return nil, err
